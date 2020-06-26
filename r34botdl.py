@@ -5,7 +5,9 @@
 # I also have a coding playlist. I listened to it while making this stupid garbage
 # https://open.spotify.com/playlist/0I48OWh7mSR7vDssy3nabw?si=47Ug13mKRC6dYEV_Wz6dPA
 # sorry if this lil advert bothered you <3
-
+# also, this script is deprecated since i cant get this shit to work with discord.js / Node.js
+# depression.
+# i'll use it in the future, however.
 
 # IMPORTS
 import rule34
@@ -33,8 +35,8 @@ testlist = ['hj','hi']
         # grab the attribute file_url and set it to fileurl for writing to a text doccument
 # Define a simple WTT function for interaction with the bot.
 # The bot uses JS so the only thing i can really do is read the text file on the JS script and work from there
-def wtt(str):
-    text_file = open("stuff.txt", "w")
+def wtt(str,str2):
+    text_file = open(str2, "w")
     t = text_file.write(str)
     text_file.close()
 # we need a list to string function for later
@@ -56,10 +58,11 @@ args = ap.parse_args() # corrected this to properly take the arguments and use t
 tagf = lts(args.tagA)
 # print(tagf)
 xurl = r.URLGen(tagf)
+wtt(xurl,'url.txt')
 wr = xmlparse(xurl) # Parse the XML URL, grabs the necessary attribute.
 # print(wr)
 # now that the worst bit of this is over, we need to write this to a text file.
-wtt(wr)
+wtt(wr,'stuff.txt')
 # easy enough
 
 # Normally, i'd ad my AKOSDEV's watermark, but i couldn't care less tbh.
