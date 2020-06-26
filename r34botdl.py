@@ -57,7 +57,7 @@ args = ap.parse_args() # corrected this to properly take the arguments and use t
 # print(args.tagA)
 tagf = lts(args.tagA)
 # print(tagf)
-xurl = r.URLGen(tagf)
+xurl = r.URLGen(tagf, limit=1)
 wtt(xurl,'url.txt')
 wr = xmlparse(xurl) # Parse the XML URL, grabs the necessary attribute.
 # print(wr)
