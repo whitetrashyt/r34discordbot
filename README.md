@@ -16,7 +16,7 @@ your terminal way will only supply you with a link, your discord bot will post i
 Here's the instructions, of course.
 ### As a discord bot:
 1. Download the file (`git clone https://github.com/whitetrashyt/r34discordbot/`or use the releases page)
-2. Grab your discord bot token (If you dont know how, check out [Discord's developer page](https://discord.com/developers/applications)
+2. Grab your discord bot token (If you dont know how, check out [Discord's developer page](https://discord.com/developers/applications))
 3. Edit the main.py file to find line 67, `client.run('enter token here')`, copy paste your token there.
 4. run main.py, either through your terminal (`py main.py`), or by double clicking on it.
 5. In your discord server (With your bot invited,) do $porn <tags>
