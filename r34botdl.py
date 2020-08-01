@@ -31,7 +31,7 @@ def xmlparse(str):
         # for every root iteration in the sub-tree "post,"
         fileurl = i.attrib['file_url']
         return fileurl
-testlist = ['hj','hi']   
+# testlist = ['hj','hi']   debug code that i left in by accident
         # grab the attribute file_url and set it to fileurl for writing to a text doccument
 # Define a simple WTT function for interaction with the bot.
 # The bot uses JS so the only thing i can really do is read the text file on the JS script and work from there
