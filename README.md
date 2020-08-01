@@ -1,5 +1,5 @@
 # r34discordbot
-(Part of) a discord bot that pulls images from rule34 and posts them.
+A discord bot that pulls images from rule34 with specific tags and posts them.
 
 This would be the entirety of the bot, but im still working on that bit. So, yeah.
 
