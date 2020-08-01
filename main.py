@@ -48,30 +48,17 @@ async def on_ready():
 async def on_message(message):
     if message.author == client.user:
         return
-    # prints the message into our console
+    # prints the message into our console for debug
     print(message.content)
 
-    if message.content.startswith('$porn'): # we have to do this in a really stupid manner
+    if message.content.startswith('$porn'): # since discord.ext isn't working, we'll have to use a very unorthodox method
         tags = rprefix(message.content, '$porn')
         answer = r34dl(tags,random.randint(1,100))
         await message.channel.send(answer + 'made by jess#0101')
 
 
-# @bot.command() # this doesn't work. Why? no clue. So we're going to have to do this the hard way.
-# async def test(ctx, arg):
-#     await ctx.say(arg)
 
 
-# since this is a very private bot im going to censor this on the github
-# runs the bot
+# logs in to the bot
 client.run('enter token here')
 
-# @bot.command()
-# async def porn(ctx, args):
-#     # use our func for rule34 polling
-#     print(r.URLGen(args, limit=1))
-#     answer = r34dl(args)
-#     print (r34dl(args))
-#     await ctx.send(answer)
-# deprecated method because @bot.command() isn't working right now
-# feel free to make some commits
