@@ -1,7 +1,6 @@
 # r34discordbot
 A discord bot that pulls images from rule34 with specific tags and posts them.
 
-This would be the entirety of the bot, but im still working on that bit. So, yeah.
 
 Feel free to use it.
 
