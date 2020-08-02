@@ -234,4 +234,4 @@ async def on_message(message):
 
 
 # logs in to the bot
-client.run('NzE2NjMzODY0ODEzOTM2NjYz.XtOnSw.UOacEbQ1Ypu-TARwp93ddyY86sI')
+client.run('enter token here')
