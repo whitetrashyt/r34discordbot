@@ -5,9 +5,7 @@
 # I also have a coding playlist. I listened to it while making this stupid garbage
 # https://open.spotify.com/playlist/0I48OWh7mSR7vDssy3nabw?si=47Ug13mKRC6dYEV_Wz6dPA
 # sorry if this lil advert bothered you <3
-# also, this script is deprecated since i cant get this shit to work with discord.js / Node.js
-# depression.
-# i'll use it in the future, however.
+# also, this script is deprecated since im already using it in my main.py file
 
 # IMPORTS
 import rule34
