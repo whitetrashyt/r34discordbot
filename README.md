@@ -18,7 +18,7 @@ Here's the instructions, of course.
 2. Grab your discord bot token (If you dont know how, check out [Discord's developer page](https://discord.com/developers/applications))
 3. Edit the main.py file to find line 70, `client.run('enter token here')`, copy paste your token there.
 4. run main.py, either through your terminal (`py main.py`), or by double clicking on it.
-5. In your discord server (With your bot invited,) do $porn <tags>
+5. In your discord server (With your bot invited,) do $help
 6. have fun, you loser.
 ### Through your terminal:
 1. Open your console (Command prompt or Terminal, what have you.)
