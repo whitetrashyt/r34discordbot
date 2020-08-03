@@ -30,4 +30,5 @@ There is actively no special character filter, so if you were to enter `-t furry
 
 # Credits
 Thanks to [LordOfPolls](https://github.com/LordOfPolls) for his [Rule34-api-wrapper](https://github.com/LordOfPolls/Rule34-API-Wrapper) (It made my job semi easier and also much more difficult)
+
 Thanks to Marloes for the help with debugging and stuff, i had some problems along the way and their feed back was definitely helpful!
