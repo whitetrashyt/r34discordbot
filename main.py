@@ -1,244 +1,255 @@
-# import the discord.py api
 import discord
-# just as on our github script we need to import rule34 api from LordOfPolls and urllib.request, aswell as xml parser
-import urllib.request as u # requests xml files online
-import xml.etree.ElementTree as et # parses our xml files
-import rule34 # you already know
-import random # for random PID
-from discord.ext import commands as commands
+from discord.ext import commands as command
+import urllib.request as u
+import xml.etree.ElementTree as et
+import rule34
+import random
+import time
+import asyncio
+import os
+ltime = time.localtime
 
-
-
-# functions from our r34botdl script on the github
-# the xml parse func
 def xmlparse(str):
-	xmlurl = u.urlopen(str)
-	# opens the url/xml file 
-	tree = et.parse(xmlurl)
-	# sets our xml tree to the parsed xml file
-	root = tree.getroot()
+	root = et.parse(u.urlopen(str))
 	for i in root.iter('post'):
-		# for every root iteration in the sub-tree "post,"
 		fileurl = i.attrib['file_url']
 		return fileurl
-def xmlfetchtags(str):
-	xmlurl = u.urlopen(str)
-	# opens the url/xml file 
-	tree = et.parse(xmlurl)
-	# sets our xml tree to the parsed xml file
-	root = tree.getroot()
-	for i in root.iter('post'):
-		# for every root iteration in the sub-tree "post,"
-		tags = i.attrib['tags']
-		return tags
-def xmlfetchcount(str):
-	xmlurl = u.urlopen(str)
-	# opens the url/xml file 
-	tree = et.parse(xmlurl)
-	# sets our xml tree to the parsed xml file
-	root = tree.getroot()
+def xmlcount(str):
+	root = et.parse(u.urlopen(str))
 	for i in root.iter('posts'):
 		count = i.attrib['count']
-		print('xml count is: ' + count)
 		return count
-client = commands.Bot(command_prefix='&') # you did had bot = commands but should actually be client ^-^ / oh my god thank you
-Client = discord.Client() # define our client
-# Set this for easy access
+
+client = command.Bot(command_prefix='&')
+Client = discord.Client()
+
+client.remove_command('help')
+
 r = rule34.Rule34
-# we define the xml grab and parse now as a func
-def pidfix(str): # fixes our pid random generator with our max ammount
-    print(str) # this is for debugging purposes, will remove later.
-    ye = int(xmlfetchcount(r.urlGen(tags=str,limit=1))) # polls how many images there are for the specified tags
-    stepo = ye / 42 # there are 42 posts on a page, so divide this by 42
-    newpid = round(stepo) # rounds these so we dont have insane decimals
-    return newpid
-recurse = 0
-def r34dl(str,int):
-	print(f"int: {int}") # always use f-string :3
-	
+
+def pidfix(str):
+	ye = int(xmlcount(r.urlGen(tags=str,limit=1)))
+	return ye
+
+def rdl(str,int):
+	print(f'[INFO {ltime}]: integer provided: {int}')
+
 	if int > 2000:
 		int = 2000
-	print(f'int after rounding: {int}')
 	int = random.randint(1,int)
-	print(f'int after rand: {int}')
-	xurl = r.urlGen(tags=str,limit=1,PID=int) # this causes a problem if the pages for a specific tab are not above or equal to the supplied integer. Too bad!
-	
+	print(f'[INFO {ltime}]: integer after randomizing: {int}')
+	xurl = r.urlGen(tags=str,limit=1,PID=int)
+	print(xurl)
 	wr = xmlparse(xurl)
-	htags = xmlfetchtags(xurl)
-	print(wr.lstrip('.'))
+	
 	if 'webm' in wr.lstrip('.'):
 		if 'sound' not in str:
-			print(f'fetched a webm, recursing.')
-			wr = r34dl(str,pidfix(str))
+			print(f'[INFO {ltime}]: We got a .webm, user didnt specify sound. Recursing. user tags: {str}')
+			wr = rdl(str,pidfix(str))
 		else:
 			pass
 	elif 'webm' not in wr:
-		print('No webm found, not recursing.')
-		print(xurl)
+		print(f'[INFO {ltime}]: Not a webm, dont recurse.')
 	return wr
 
 
 
-def rprefix(str, r): 
-	rstr = str.replace(r,"")
-	return rstr
+async def statuschange():
+	while True:
+		await client.change_presence(activity=discord.Game(name='with my pussy'))
+		await asyncio.sleep(10)
+		await client.change_presence(activity=discord.Game(name='&help'))
+		await asyncio.sleep(10)
 
-
-
-@client.event # an event to print on ready
+@client.event
 async def on_ready():
-	print(f'Logged in as {client.user.name}!') # always use f-string :3
-	
-@client.event # event that listens for message that contains our prefix and a command
-async def on_message(message):
-	if message.author == client.user:
-		return
-	# prints the message into our console for debug
-	print(f"Message Content: {message.content}") # always use f-string :3
-
-	if message.content.startswith('&porn'): # since discord.ext isn't working, we'll have to use a very unorthodox method
-		tags = rprefix(message.content, '&porn')
-		newint = pidfix(tags)
-		print(newint)
-		if newint > 2000:
-			newint = 2000
-		
-
-		if newint > 1:
-			answer = r34dl(tags,random.randint(1,newint))
-		if newint < 1:
-			answer = r34dl(tags,1)
-		
-		
-		embed = discord.Embed(title=f'{message.content}', color=message.author.color)
-		embed.set_author(name=f'{message.author.display_name}', icon_url=f'{message.author.avatar_url}')
+	print(f'[INFO {ltime}]: Logged in as {client.user.name}!')
+	await statuschange()
+# ================================================================================================================
+@client.command()
+async def porn(ctx,*arg):
+	# this is inefficent but also the only way i can do this
+	arg = str(arg)
+	arg = arg.replace(',','')
+	arg = arg.replace('(','')
+	arg = arg.replace(')','')
+	arg = arg.replace("'",'')
+	print(f'[DEBUG {ltime}]: arg is now {arg}')
+	waitone = await ctx.send("***:desktop: We're polling Rule34! Please wait a few seconds.***")
+	newint = pidfix(arg)
+	if newint > 2000:
+		newint = 2000
+		answer = rdl(arg,random.randint(1,newint))
+	if newint > 1:
+		answer = rdl(arg,random.randint(1,newint))
+	elif newint < 1:
+		answer = rdl(arg,1)
+   
+	if 'webm' in answer:
+		waitone.delete
+		await ctx.send(answer)
+	elif 'webm' not in answer:
+		embed = discord.Embed(title=f'Rule34: {arg}',color=ctx.author.color)
+		embed.set_author(name=f'{ctx.author.display_name}',icon_url=f'{ctx.author.avatar_url}')
 		embed.set_thumbnail(url='https://rule34.paheal.net/themes/rule34v2/rule34_logo_top.png')
 		embed.set_image(url=f'{answer}')
-		embed.set_footer(text="Made by jess#3347, with help from Marloes#1337", icon_url='https://cdn.discordapp.com/avatars/268211297332625428/a_06db63e4477b4a327f8a689f559bf887.gif?size=128')
-
-		if 'webm' in answer:
-			await message.channel.send(answer)
-		elif 'webm' not in answer:
-			await message.channel.send(embed=embed)
-				
-	if message.content.startswith('&help'):
-		embed = discord.Embed(title=f'Pornbot Help - Prefix is &', color=message.author.color)
-		embed.set_author(name=f'{message.author.display_name}', icon_url=f'{message.author.avatar_url}')
-		embed.set_image(url=f'https://pistuff.000webhostapp.com/commands.PNG')
-		embed.set_footer(text='Made by jess#3347, with help from Marloes#1337',icon_url='https://cdn.discordapp.com/avatars/268211297332625428/a_06db63e4477b4a327f8a689f559bf887.gif?size=128')
-		await message.channel.send(embed=embed)
-	if message.content.startswith('&coin'):
-		side = random.randint(1,2)
+		embed.set_footer(text="Pornbot 2.0 - made by jess#3347",icon_url='https://cdn.discordapp.com/avatars/268211297332625428/ac2179a89c4a61bbe1548f8cd4359dc5.png?size=128')
+		waitone.delete
+		await ctx.send(embed = embed)
+# ================================================================================================================
+@client.command()
+async def rr(ctx):
+	bullet = random.randint(1,6)
+	if bullet == 3:
+		embed = discord.Embed(title=f'CRACK.')
+		embed.set_author(name=f'{ctx.author.display_name} - Russian roulette',icon_url=f'{ctx.author.avatar_url}')
+		embed.set_image(url=rdl('gore',random.randint(1,100)))
+		embed.set_footer(text='Pornbot 2.0 - Made by jess#3347')
+		await ctx.send(embed=embed)
+	if bullet == 6:
+		embed = discord.Embed(title=f'CRACK.')
+		embed.set_author(name=f'{ctx.author.display_name} - Russian roulette',icon_url=f'{ctx.author.avatar_url}')
+		embed.set_image(url=rdl('gore',random.randint(1,100)))
+		embed.set_footer(text='Pornbot 2.0 - Made by jess#3347')
+		await ctx.send(embed=embed)
+	elif bullet != 3 or bullet != 6:
+		await ctx.send('***Click...***')
+# ================================================================================================================
+@client.command()
+async def rcoin(ctx):
+	side = random.randint(1,100)
+	if side == 50 or side > 50:
+		embed = discord.Embed(title=f'NSFW Coinflip: Heads', color=ctx.author.color)
+		embed.set_author(name=f'{ctx.author.display_name} - NSFW Coinflip',icon_url=f'{ctx.author.avatar_url}')
+		embed.set_image(url=rdl('blowjob animated',random.randint(1,100)))
+		embed.set_footer(text='Pornbot 2.0 - Made by jess#3347')
+		await ctx.send(embed=embed)
+	elif side < 50:
+		embed = discord.Embed(title=f'NSFW Coinflip: Tails', color=ctx.author.color)
+		embed.set_author(name=f'{ctx.author.display_name} - NSFW Coinflip',icon_url=f'{ctx.author.avatar_url}')
+		embed.set_image(url=rdl('big_ass animated',random.randint(1,100)))
+		embed.set_footer(text='Pornbot 2.0 - Made by jess#3347')
+		await ctx.channel.send(embed=embed)
+# ================================================================================================================
+@client.command()
+async def fcoin(ctx):
+	side = random.randint(1,100)
+	if side == 50 or side > 50:
+		embed = discord.Embed(title=f'Furry Coinflip: Heads', color=ctx.author.color)
+		embed.set_author(name=f'{ctx.author.display_name} - Furry Coinflip',icon_url=f'{ctx.author.avatar_url}')
+		embed.set_image(url=rdl('furry blowjob animated',random.randint(1,100)))
+		embed.set_footer(text='Pornbot 2.0 - Made by jess#3347')
+		await ctx.channel.send(embed=embed)
+	elif side < 50:
+		embed = discord.Embed(title=f'Furry Coinflip: Tails', color=ctx.author.color)
+		embed.set_author(name=f'{ctx.author.display_name} - Furry Coinflip',icon_url=f'{ctx.author.avatar_url}')
+		embed.set_image(url=rdl('furry tail animated',random.randint(1,100)))
+		embed.set_footer(text='Pornbot 2.0 - Made by jess#3347')
+		await ctx.channel.send(embed=embed)
+# ================================================================================================================
+@client.command()
+async def coin(ctx):
+	side = random.randint(1,100)
+	if side == 50 or side > 50:
+		await ctx.channel.send('***The coin landed on heads***')
+	if side < 50:
+		await ctx.channel.send('***The coin landed on tails.***')
+# ================================================================================================================
+@client.command()
+async def d6(ctx,arg=1):
+	if arg == '':
+		dside = str(random.randint(1,6))
+		await ctx.channel.send(f'You rolled:' + ' ' + dside)
+	else:
 		try:
-			if side == 1:
-				await message.channel.send('The coin landed on heads')
-			if side == 2:
-				await message.channel.send('The coin landed on tails')
-			else:
-				pass
+			aint = int(arg)
 		except:
-			print('you dont know how to program.')
-			await message.channel.send('Jess obviously needs to learn how to program')
-	if message.content.startswith('&d6'):
-		args = rprefix(message.content,'&d6')
-		if args == '':
-			dside = str(random.randint(1,6))
-			await message.channel.send(f'You rolled:' + ' ' + dside)
-		else:
-			try:
-				aint = int(args)
-			except:
-				print(f'Looks like the idiots a user and tried to provide string instead of int.')
-				await message.channel.send('Hey idiot, send an integer, not text. Example: 6')
-			mx = 6 * aint
-			total = str(random.randint(1,mx))
+			print(f'Looks like the idiots a user and tried to provide string instead of int.')
+			await ctx.channel.send('Hey idiot, send an integer, not text. Example: 6')
+		mx = 6 * aint
+		total = str(random.randint(1,mx))
 			
-			await message.channel.send(f'You rolled a total of:' + ' ' + total)
-	if message.content.startswith('&d8'):
-		args = rprefix(message.content,'&d8')
-		if args == '':
-			dside = str(random.randint(1,8))
-			await message.channel.send(f'You rolled:' + ' ' + dside)
-		else:
-			try:
-				aint = int(args)
-			except:
-				print(f'Looks like the idiots a user and tried to provide string instead of int.')
-				await message.channel.send('Hey idiot, send an integer, not text. Example: 6')
-			mx = 8 * aint
-			total = str(random.randint(1,mx))
+		await ctx.channel.send(f'You rolled a total of:' + ' ' + total)
+# ================================================================================================================
+@client.command()
+async def d8(ctx,arg=1):
+	if arg == '':
+		dside = str(random.randint(1,8))
+		await ctx.channel.send(f'You rolled:' + ' ' + dside)
+	else:
+		try:
+			aint = int(arg)
+		except:
+			print(f'Looks like the idiots a user and tried to provide string instead of int.')
+			await ctx.channel.send('Hey idiot, send an integer, not text. Example: 6')
+		mx = 8 * aint
+		total = str(random.randint(1,mx))
 			
-			await message.channel.send(f'You rolled a total of:' + ' ' + total)
-	if message.content.startswith('&d10'):
-		args = rprefix(message.content,'&d10')
-		if args == '':
-			dside = str(random.randint(1,10))
-			await message.channel.send(f'You rolled:' + ' ' + dside)
-		else:
-			try:
-				aint = int(args)
-			except:
-				print(f'Looks like the idiots a user and tried to provide string instead of int.')
-				await message.channel.send('Hey idiot, send an integer, not text. Example: 6')
-			mx = 10 * aint
-			total = str(random.randint(1,mx))
-			
-			await message.channel.send(f'You rolled a total of:' + ' ' + total)
-	if message.content.startswith('&d12'):
-		args = rprefix(message.content,'&d12')
-		if args == '':
-			dside = str(random.randint(1,12))
-			await message.channel.send(f'You rolled:' + ' ' + dside)
-		else:
-			try:
-				aint = int(args)
-			except:
-				print(f'Looks like the idiots a user and tried to provide string instead of int.')
-				await message.channel.send('Hey idiot, send an integer, not text. Example: 6')
-			mx = 12 * aint
-			total = str(random.randint(1,mx))
-			
-			await message.channel.send(f'You rolled a total of:' + ' ' + total)
-	if message.content.startswith('&dc'):
-		c = rprefix(message.content,'&dc')
-		print(c)
-		d = c.split(' ')
-		print(d)
-		del d[0]
-		# default values for variables
-		b = '' # defined this first since its the only thing i need
-		a = ''
-		if d != [str]:
-			try:
-				a = str(d[0])
-				b = str(d[1])
-			except:
-				if len(d) == 0:
-					print('no arguments provided')
-					await message.channel.send(f"Hey vegetable, you didn't provide an argument. If you did, contact jess and tell her to fix it.")
-				if len(d) == 1:
-					b = '' # reset it just incase, yknow?
-					print('no second variable recieved, skipping.')
-				else:
-					await message.channel.send(f"That wasn't supposed to happen. Looks like jess programmed the bot incorrectly.")
-					await message.channel.send(f"If this happens, send a screenshot to jess with what you did and what came up, and send her this:")
-					await message.channel.send(f'ERRORCATCH: Else triggered when len(d) should be 0, 1, or 2.')
-					
-		print('a is equal to' + a)
-		print('b is equal to' + b) # it is really this simple.
-
-		if b == '':
-			dside = str(random.randint(1,int(a)))
-			await message.channel.send(f'You rolled:' + ' ' + dside)
-		else:
-			mx = int(a) * int(b)
-			print('max is:' + str(mx))
-			total = str(random.randint(1,mx))
-			
-			await message.channel.send(f'You rolled a total of:' + ' ' + total)
-
-
-
-
-# logs in to the bot
+		await ctx.channel.send(f'You rolled a total of:' + ' ' + total)
+# ================================================================================================================
+@client.command()
+async def d10(ctx,arg=1):
+	if arg == '':
+		dside = str(random.randint(1,10))
+		await ctx.channel.send(f'You rolled:' + ' ' + dside)
+	else:
+		try:
+			aint = int(arg)
+		except:
+			print(f'Looks like the idiots a user and tried to provide string instead of int.')
+			await ctx.channel.send('Hey idiot, send an integer, not text. Example: 6')
+		mx = 10 * aint
+		total = str(random.randint(1,mx))
+		await ctx.send(f'You rolled a total of {total}')
+# ================================================================================================================
+@client.command()
+async def d12(ctx,arg=1):
+	if arg == '':
+		dside = str(random.randint(1,12))
+		await ctx.channel.send(f'You rolled:' + ' ' + dside)
+	else:
+		try:
+			aint = int(arg)
+		except:
+			print(f'Looks like the idiots a user and tried to provide string instead of int.')
+			await ctx.channel.send('Hey idiot, send an integer, not text. Example: 6')
+		mx = 12 * aint
+		total = str(random.randint(1,mx))
+		await ctx.send(f'You rolled a total of {total}') 
+# ================================================================================================================
+@client.command()
+async def dc(ctx,arg1,arg2 = 1):
+	
+	a = str(arg1)
+	if str(arg2) != '':
+		b = str(arg2)
+	
+	print('a is equal to' + a)
+	print('b is equal to' + b) # it is really this simple.
+	if b == '':
+		dside = str(random.randint(1,int(a)))
+		await ctx.channel.send(f'You rolled:' + ' ' + dside)
+	else:
+		mx = int(a) * int(b)
+		print('max is:' + str(mx))
+		total = str(random.randint(1,mx))
+	await ctx.channel.send(f'You rolled a total of:' + ' ' + total)
+# ================================================================================================================
+@client.command()
+async def help(ctx):
+	embed=discord.Embed(title="Pornbot help", description="Prefix is &", color=0xff80ff)
+	embed.set_author(name=f'{ctx.author.display_name}', icon_url=f'{ctx.author.avatar_url}')
+	embed.add_field(name="'porn [tags]'", value="Polls rule34 for porn following your tags.", inline=False)
+	embed.add_field(name="'d6 [dice]'", value="Rolls (a/multiple) 6 sided die. Change [dice] to add several.", inline=False)
+	embed.add_field(name="'d8 [dice]'", value="Rolls (a/multiple) 8 sided die, change your [dice] argument to add several.", inline=False)
+	embed.add_field(name="'d10 [dice]'", value="Rolls (a/multiple) 10 sided die, change your [dice] argument to add several.", inline=False)
+	embed.add_field(name="'d12 [dice]'", value="Rolls (a/multiple) 12 sided die, change your [dice] argument to add several.", inline=False)
+	embed.add_field(name="'dc <sides> [dice]'", value="Rolls a custom-sided die, change your <sides> argument to set sides, and your [dice] argument to add more dice.", inline=False)
+	embed.add_field(name="'coin'", value="Flips a coin.", inline=False)
+	embed.add_field(name="'rcoin'", value="Flips a coin and posts a nsfw image based on what you get.", inline=False)
+	embed.add_field(name="'fcoin'", value="Flips a coin and posts a nsfw furry image based on what you get.", inline=False)
+	embed.add_field(name="'rr'", value="Russian roulette. Posts gore images if gun goes off.", inline=False)
+	embed.set_footer(text="Made by jess#3347, with help from Marloes#1337",icon_url='https://cdn.discordapp.com/avatars/268211297332625428/ac2179a89c4a61bbe1548f8cd4359dc5.png?size=128')
+	await ctx.send(embed=embed)
 client.run('enter token here')
+	
