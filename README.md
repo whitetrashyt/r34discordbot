@@ -21,6 +21,8 @@ Here's the instructions, of course.
 5. In your discord server (With your bot invited,) do $help
 6. have fun, you loser.
 ### Through your terminal:
+#### Note: This method is no longer present after 2.0! I will no longer offer support for it after 12/31/20.
+#### If you still wish to use this method, you can download it in version 1.2 and below.
 1. Open your console (Command prompt or Terminal, what have you.)
 2. Navigate to the folder which the .py file is located
 3. run either through `py r34discordbot.py -t <tags>` or `r34discordbot.py -t <tags>`
