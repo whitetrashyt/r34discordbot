@@ -9,10 +9,9 @@ Python 3.8
 
 # Usage
 There are two ways to use this:
-1. As a discord bot
-2. Through your terminal
-your terminal way will only supply you with a link, your discord bot will post it in your server.
-Here's the instructions, of course.
+1. As a discord bot (Will post links in your discord, generally easier)
+2. (DEPRECATED) Through your terminal (Will supply a link for you locally)
+
 ### As a discord bot:
 1. Download the file (`git clone https://github.com/whitetrashyt/r34discordbot/`or use the releases page)
 2. Grab your discord bot token (If you dont know how, check out [Discord's developer page](https://discord.com/developers/applications))
