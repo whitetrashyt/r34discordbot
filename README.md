@@ -4,6 +4,8 @@ A discord bot that pulls images from rule34 with specific tags and posts them.
 
 Feel free to use it.
 
+[Trello Board](https://trello.com/b/07EqYuyc)
+
 # Requirements
 Python 3.8
 
