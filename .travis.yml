@@ -1,1 +1,4 @@
 language: python
+before_install:
+  - python3 -m pip install discord
+  - python3 -m pip install rule34
