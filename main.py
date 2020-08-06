@@ -7,7 +7,7 @@ import random
 import time
 import asyncio
 import os
-ltime = time.localtime
+ltime = time.asctime(time.localtime())
 
 def xmlparse(str):
 	root = et.parse(u.urlopen(str))
