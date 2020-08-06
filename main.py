@@ -29,6 +29,7 @@ r = rule34.Rule34
 
 def pidfix(str):
 	ye = int(xmlcount(r.urlGen(tags=str,limit=1)))
+	ye = ye - 1
 	return ye
 
 def rdl(str,int):
@@ -36,22 +37,26 @@ def rdl(str,int):
 
 	if int > 2000:
 		int = 2000
-	int = random.randint(1,int)
+	if int == 0:
+		int == 0
+		print(f'[INFO {ltime}]: Integer is 0, accommodating for offset overflow bug. ')	
+	elif int != 0:	
+		int = random.randint(1,int)
 	print(f'[INFO {ltime}]: integer after randomizing: {int}')
 	xurl = r.urlGen(tags=str,limit=1,PID=int)
 	print(xurl)
 	wr = xmlparse(xurl)
 	
-	if 'webm' in wr.lstrip('.'):
+	if 'webm' in wr:
 		if 'sound' not in str:
-			print(f'[INFO {ltime}]: We got a .webm, user didnt specify sound. Recursing. user tags: {str}')
-			wr = rdl(str,pidfix(str))
+			if 'webm' not in str:
+				print(f'[INFO {ltime}]: We got a .webm, user didnt specify sound. Recursing. user tags: {str}')
+				wr = rdl(str,pidfix(str))
 		else:
 			pass
 	elif 'webm' not in wr:
 		print(f'[INFO {ltime}]: Not a webm, dont recurse.')
 	return wr
-
 
 
 async def statuschange():
@@ -83,8 +88,10 @@ async def porn(ctx,*arg):
 	if newint > 1:
 		answer = rdl(arg,random.randint(1,newint))
 	elif newint < 1:
-		answer = rdl(arg,1)
-   
+		if newint == 0:
+			answer = rdl(arg,0)
+		elif newint != 0:
+			answer = rdl(arg,1)
 	if 'webm' in answer:
 		waitone.delete
 		await ctx.send(answer)
