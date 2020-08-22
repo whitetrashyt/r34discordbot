@@ -100,7 +100,7 @@ async def porn(ctx,*arg):
 		embed.set_author(name=f'{ctx.author.display_name}',icon_url=f'{ctx.author.avatar_url}')
 		embed.set_thumbnail(url='https://rule34.paheal.net/themes/rule34v2/rule34_logo_top.png')
 		embed.set_image(url=f'{answer}')
-		embed.set_footer(text="Pornbot 2.0 - made by jess#3347",icon_url='https://cdn.discordapp.com/avatars/268211297332625428/ac2179a89c4a61bbe1548f8cd4359dc5.png?size=128')
+		embed.set_footer(text="Pornbot 2.0 - made by jess.#3347",icon_url='https://cdn.discordapp.com/avatars/268211297332625428/ac2179a89c4a61bbe1548f8cd4359dc5.png?size=128')
 		waitone.delete
 		await ctx.send(embed = embed)
 # ================================================================================================================
@@ -111,13 +111,13 @@ async def rr(ctx):
 		embed = discord.Embed(title=f'CRACK.')
 		embed.set_author(name=f'{ctx.author.display_name} - Russian roulette',icon_url=f'{ctx.author.avatar_url}')
 		embed.set_image(url=rdl('gore',random.randint(1,100)))
-		embed.set_footer(text='Pornbot 2.0 - Made by jess#3347')
+		embed.set_footer(text='Pornbot 2.0 - Made by jess.#3347')
 		await ctx.send(embed=embed)
 	if bullet == 6:
 		embed = discord.Embed(title=f'CRACK.')
 		embed.set_author(name=f'{ctx.author.display_name} - Russian roulette',icon_url=f'{ctx.author.avatar_url}')
 		embed.set_image(url=rdl('gore',random.randint(1,100)))
-		embed.set_footer(text='Pornbot 2.0 - Made by jess#3347')
+		embed.set_footer(text='Pornbot 2.0 - Made by jess.#3347')
 		await ctx.send(embed=embed)
 	elif bullet != 3 or bullet != 6:
 		await ctx.send('***Click...***')
@@ -129,13 +129,13 @@ async def rcoin(ctx):
 		embed = discord.Embed(title=f'NSFW Coinflip: Heads', color=ctx.author.color)
 		embed.set_author(name=f'{ctx.author.display_name} - NSFW Coinflip',icon_url=f'{ctx.author.avatar_url}')
 		embed.set_image(url=rdl('blowjob animated',random.randint(1,100)))
-		embed.set_footer(text='Pornbot 2.0 - Made by jess#3347')
+		embed.set_footer(text='Pornbot 2.0 - Made by jess.#3347')
 		await ctx.send(embed=embed)
 	elif side < 50:
 		embed = discord.Embed(title=f'NSFW Coinflip: Tails', color=ctx.author.color)
 		embed.set_author(name=f'{ctx.author.display_name} - NSFW Coinflip',icon_url=f'{ctx.author.avatar_url}')
 		embed.set_image(url=rdl('big_ass animated',random.randint(1,100)))
-		embed.set_footer(text='Pornbot 2.0 - Made by jess#3347')
+		embed.set_footer(text='Pornbot 2.0 - Made by jess.#3347')
 		await ctx.channel.send(embed=embed)
 # ================================================================================================================
 @client.command()
@@ -145,13 +145,13 @@ async def fcoin(ctx):
 		embed = discord.Embed(title=f'Furry Coinflip: Heads', color=ctx.author.color)
 		embed.set_author(name=f'{ctx.author.display_name} - Furry Coinflip',icon_url=f'{ctx.author.avatar_url}')
 		embed.set_image(url=rdl('furry blowjob animated',random.randint(1,100)))
-		embed.set_footer(text='Pornbot 2.0 - Made by jess#3347')
+		embed.set_footer(text='Pornbot 2.0 - Made by jess.#3347')
 		await ctx.channel.send(embed=embed)
 	elif side < 50:
 		embed = discord.Embed(title=f'Furry Coinflip: Tails', color=ctx.author.color)
 		embed.set_author(name=f'{ctx.author.display_name} - Furry Coinflip',icon_url=f'{ctx.author.avatar_url}')
 		embed.set_image(url=rdl('furry tail animated',random.randint(1,100)))
-		embed.set_footer(text='Pornbot 2.0 - Made by jess#3347')
+		embed.set_footer(text='Pornbot 2.0 - Made by jess.#3347')
 		await ctx.channel.send(embed=embed)
 # ================================================================================================================
 @client.command()
@@ -256,7 +256,7 @@ async def help(ctx):
 	embed.add_field(name="'rcoin'", value="Flips a coin and posts a nsfw image based on what you get.", inline=False)
 	embed.add_field(name="'fcoin'", value="Flips a coin and posts a nsfw furry image based on what you get.", inline=False)
 	embed.add_field(name="'rr'", value="Russian roulette. Posts gore images if gun goes off.", inline=False)
-	embed.set_footer(text="Made by jess#3347, with help from Marloes#1337",icon_url='https://cdn.discordapp.com/avatars/268211297332625428/ac2179a89c4a61bbe1548f8cd4359dc5.png?size=128')
+	embed.set_footer(text="Made by jess.#3347, with help from Marloes#1337",icon_url='https://cdn.discordapp.com/avatars/268211297332625428/ac2179a89c4a61bbe1548f8cd4359dc5.png?size=128')
 	await ctx.send(embed=embed)
 @client.command()
 async def suggest(ctx):
