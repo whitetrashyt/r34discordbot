@@ -1,3 +1,9 @@
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Please setup these settings before launching the bot.
+
+# =============[General]=============
+token = 'token' # this is your discord bot token. 
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 import discord
 from discord.ext import commands as command
 import urllib.request as u
@@ -7,8 +13,12 @@ import random
 import time
 import asyncio
 import os
+import requests
 ltime = time.asctime(time.localtime())
-
+client = command.Bot(command_prefix='&')
+Client = discord.Client()
+client.remove_command('help')
+r = rule34.Rule34
 def xmlparse(str):
 	root = et.parse(u.urlopen(str))
 	for i in root.iter('post'):
@@ -19,19 +29,10 @@ def xmlcount(str):
 	for i in root.iter('posts'):
 		count = i.attrib['count']
 		return count
-
-client = command.Bot(command_prefix='&')
-Client = discord.Client()
-
-client.remove_command('help')
-
-r = rule34.Rule34
-
 def pidfix(str):
 	ye = int(xmlcount(r.urlGen(tags=str,limit=1)))
 	ye = ye - 1
 	return ye
-
 def rdl(str,int):
 	print(f'[INFO {ltime}]: integer provided: {int}')
 
@@ -57,22 +58,23 @@ def rdl(str,int):
 	elif 'webm' not in wr:
 		print(f'[INFO {ltime}]: Not a webm, dont recurse.')
 	return wr
-
-
 async def statuschange():
 	while True:
 		await client.change_presence(activity=discord.Game(name='with my pussy'))
 		await asyncio.sleep(10)
 		await client.change_presence(activity=discord.Game(name='&help'))
 		await asyncio.sleep(10)
-
+# Definitions of bot events starts here
+# ================================================================================================================
 @client.event
 async def on_ready():
 	print(f'[INFO {ltime}]: Logged in as {client.user.name}!')
 	await statuschange()
+# Definitions of bot commands starts here
 # ================================================================================================================
 @client.command()
 async def porn(ctx,*arg):
+	answer = ''
 	# this is inefficent but also the only way i can do this
 	arg = str(arg)
 	arg = arg.replace(',','')
@@ -86,22 +88,24 @@ async def porn(ctx,*arg):
 		newint = 2000
 		answer = rdl(arg,random.randint(1,newint))
 	if newint > 1:
+
 		answer = rdl(arg,random.randint(1,newint))
 	elif newint < 1:
 		if newint == 0:
 			answer = rdl(arg,0)
 		elif newint != 0:
 			answer = rdl(arg,1)
+   
 	if 'webm' in answer:
-		waitone.delete
+		await waitone.delete
 		await ctx.send(answer)
 	elif 'webm' not in answer:
 		embed = discord.Embed(title=f'Rule34: {arg}',color=ctx.author.color)
 		embed.set_author(name=f'{ctx.author.display_name}',icon_url=f'{ctx.author.avatar_url}')
 		embed.set_thumbnail(url='https://rule34.paheal.net/themes/rule34v2/rule34_logo_top.png')
 		embed.set_image(url=f'{answer}')
-		embed.set_footer(text="Pornbot 2.0 - made by jess.#3347",icon_url='https://cdn.discordapp.com/avatars/268211297332625428/ac2179a89c4a61bbe1548f8cd4359dc5.png?size=128')
-		waitone.delete
+		embed.set_footer(text="Pornbot 2.0 - made by jess#3347",icon_url='https://cdn.discordapp.com/avatars/268211297332625428/e5e43e26d4749c96b48a9465ff564ed2.png?size=128')
+		await waitone.delete
 		await ctx.send(embed = embed)
 # ================================================================================================================
 @client.command()
@@ -111,13 +115,13 @@ async def rr(ctx):
 		embed = discord.Embed(title=f'CRACK.')
 		embed.set_author(name=f'{ctx.author.display_name} - Russian roulette',icon_url=f'{ctx.author.avatar_url}')
 		embed.set_image(url=rdl('gore',random.randint(1,100)))
-		embed.set_footer(text='Pornbot 2.0 - Made by jess.#3347')
+		embed.set_footer(text='Pornbot 2.0 - Made by jess#3347')
 		await ctx.send(embed=embed)
 	if bullet == 6:
 		embed = discord.Embed(title=f'CRACK.')
 		embed.set_author(name=f'{ctx.author.display_name} - Russian roulette',icon_url=f'{ctx.author.avatar_url}')
 		embed.set_image(url=rdl('gore',random.randint(1,100)))
-		embed.set_footer(text='Pornbot 2.0 - Made by jess.#3347')
+		embed.set_footer(text='Pornbot 2.0 - Made by jess#3347')
 		await ctx.send(embed=embed)
 	elif bullet != 3 or bullet != 6:
 		await ctx.send('***Click...***')
@@ -129,13 +133,13 @@ async def rcoin(ctx):
 		embed = discord.Embed(title=f'NSFW Coinflip: Heads', color=ctx.author.color)
 		embed.set_author(name=f'{ctx.author.display_name} - NSFW Coinflip',icon_url=f'{ctx.author.avatar_url}')
 		embed.set_image(url=rdl('blowjob animated',random.randint(1,100)))
-		embed.set_footer(text='Pornbot 2.0 - Made by jess.#3347')
+		embed.set_footer(text='Pornbot 2.0 - Made by jess#3347')
 		await ctx.send(embed=embed)
 	elif side < 50:
 		embed = discord.Embed(title=f'NSFW Coinflip: Tails', color=ctx.author.color)
 		embed.set_author(name=f'{ctx.author.display_name} - NSFW Coinflip',icon_url=f'{ctx.author.avatar_url}')
 		embed.set_image(url=rdl('big_ass animated',random.randint(1,100)))
-		embed.set_footer(text='Pornbot 2.0 - Made by jess.#3347')
+		embed.set_footer(text='Pornbot 2.0 - Made by jess#3347')
 		await ctx.channel.send(embed=embed)
 # ================================================================================================================
 @client.command()
@@ -145,13 +149,13 @@ async def fcoin(ctx):
 		embed = discord.Embed(title=f'Furry Coinflip: Heads', color=ctx.author.color)
 		embed.set_author(name=f'{ctx.author.display_name} - Furry Coinflip',icon_url=f'{ctx.author.avatar_url}')
 		embed.set_image(url=rdl('furry blowjob animated',random.randint(1,100)))
-		embed.set_footer(text='Pornbot 2.0 - Made by jess.#3347')
+		embed.set_footer(text='Pornbot 2.0 - Made by jess#3347')
 		await ctx.channel.send(embed=embed)
 	elif side < 50:
 		embed = discord.Embed(title=f'Furry Coinflip: Tails', color=ctx.author.color)
 		embed.set_author(name=f'{ctx.author.display_name} - Furry Coinflip',icon_url=f'{ctx.author.avatar_url}')
 		embed.set_image(url=rdl('furry tail animated',random.randint(1,100)))
-		embed.set_footer(text='Pornbot 2.0 - Made by jess.#3347')
+		embed.set_footer(text='Pornbot 2.0 - Made by jess#3347')
 		await ctx.channel.send(embed=embed)
 # ================================================================================================================
 @client.command()
@@ -256,10 +260,50 @@ async def help(ctx):
 	embed.add_field(name="'rcoin'", value="Flips a coin and posts a nsfw image based on what you get.", inline=False)
 	embed.add_field(name="'fcoin'", value="Flips a coin and posts a nsfw furry image based on what you get.", inline=False)
 	embed.add_field(name="'rr'", value="Russian roulette. Posts gore images if gun goes off.", inline=False)
-	embed.set_footer(text="Made by jess.#3347, with help from Marloes#1337",icon_url='https://cdn.discordapp.com/avatars/268211297332625428/ac2179a89c4a61bbe1548f8cd4359dc5.png?size=128')
+	embed.add_field(name="'shibe'", value="Posts an image of a Shiba inu.", inline=False)
+	embed.add_field(name="'cat'", value="Posts an image of a cat.", inline=False)
+	embed.add_field(name="'bird'", value="Posts an image of a bird.", inline=False)
+	embed.add_field(name="'suggest'",value="Sends a link to the github to suggest features and improvements aswell as make bug reports.")
+	embed.set_footer(text="Pornbot 2.0 - Made by jess#3347",icon_url='https://cdn.discordapp.com/avatars/268211297332625428/e5e43e26d4749c96b48a9465ff564ed2.png?size=128')
 	await ctx.send(embed=embed)
+# ================================================================================================================
 @client.command()
 async def suggest(ctx):
 	await ctx.channel.send(f'***If you have a suggestion, make an issue on the github repo: https://github.com/whitetrashyt/r34discordbot/issues***')
-client.run('enter token here')
-	
+# ================================================================================================================
+@client.command()
+async def shibe(ctx):
+	r = requests.get('https://shibe.online/api/shibes?count=1')
+	y = r.json()
+	embed= discord.Embed(title='Have a shibe.',color=0xff80ff)
+	embed.set_author(name=f'{ctx.author.display_name}',icon_url=f'{ctx.author.avatar_url}')
+	embed.set_image(url=f'{y[0]}')
+	print(f"[INFO {ltime}]: IMG URL IS {y[0]}")
+	embed.set_footer(text="Pornbot 2.0 - Made by jess#3347",icon_url='https://cdn.discordapp.com/avatars/268211297332625428/e5e43e26d4749c96b48a9465ff564ed2.png?size=128')
+	await ctx.send(embed=embed)
+# ================================================================================================================
+@client.command()
+async def cat(ctx):
+	r = requests.get('https://shibe.online/api/cats?count=1')
+	y = r.json()
+	embed = discord.Embed(title='Have a kitty.',color=0xff80ff)
+	embed.set_author(name=f'{ctx.author.display_name}',icon_url=f'{ctx.author.avatar_url}')
+	embed.set_image(url=f'{y[0]}')
+	print(f"[INFO {ltime}]: IMG URL IS {y[0]}")
+	embed.set_footer(text="Pornbot 2.0 - Made by jess#3347",icon_url='https://cdn.discordapp.com/avatars/268211297332625428/e5e43e26d4749c96b48a9465ff564ed2.png?size=128')
+	await ctx.send(embed=embed)
+# ================================================================================================================
+@client.command()
+async def bird(ctx):
+	r = requests.get('https://shibe.online/api/birds?count=1')
+	y = r.json()
+	embed= discord.Embed(title='Have a bird.',color=0xff80ff)
+	embed.set_author(name=f'{ctx.author.display_name}',icon_url=f'{ctx.author.avatar_url}')
+	embed.set_image(url=f'{y[0]}')
+	print(f"[INFO {ltime}]: IMG URL IS {y[0]}")
+	embed.set_footer(text="Pornbot 2.0 - Made by jess#3347",icon_url='https://cdn.discordapp.com/avatars/268211297332625428/e5e43e26d4749c96b48a9465ff564ed2.png?size=128')
+	await ctx.send(embed=embed)
+# ================================================================================================================
+
+
+client.run(token)
