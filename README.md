@@ -7,7 +7,7 @@ Feel free to use it.
 [Trello Board](https://trello.com/b/07EqYuyc)
 
 # Requirements
-Python 3.8
+Python 3.8 (at minimum)
 
 
 # Usage:
