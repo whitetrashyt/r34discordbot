@@ -105,7 +105,7 @@ async def porn(ctx,*arg):
 		embed.set_thumbnail(url='https://rule34.paheal.net/themes/rule34v2/rule34_logo_top.png')
 		embed.set_image(url=f'{answer}')
 		embed.set_footer(text="Pornbot 2.0 - made by jess#3347",icon_url='https://cdn.discordapp.com/avatars/268211297332625428/e5e43e26d4749c96b48a9465ff564ed2.png?size=128')
-		await waitone.delete
+		waitone.delete
 		await ctx.send(embed = embed)
 # ================================================================================================================
 @client.command()
