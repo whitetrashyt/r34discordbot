@@ -1,3 +1,6 @@
+### NOTE: This repo hasn't been tested or updated in many many months, and i'm considering deprecated for the time being.
+
+
 # r34discordbot
 A discord bot that pulls images from rule34 with specific tags and posts them.
 
