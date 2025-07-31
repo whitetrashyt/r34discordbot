@@ -154,13 +154,13 @@ async def rcoin(ctx):
 	if side == 50 or side > 50:
 		embed = discord.Embed(title=f'NSFW Coinflip: Heads', color=ctx.author.color)
 		embed.set_author(name=f'{ctx.author.display_name} - NSFW Coinflip',icon_url=f'{ctx.author.avatar.url}')
-		embed.set_image(url=rdl('blowjob animated',random.randint(1,100)))
+		embed.set_image(url=rdl('blowjob animated -video',random.randint(1,100)))
 		embed.set_footer(text='Pornbot 2.0 - Made By ihatedisc.ord')
 		await ctx.send(embed=embed)
 	elif side < 50:
 		embed = discord.Embed(title=f'NSFW Coinflip: Tails', color=ctx.author.color)
 		embed.set_author(name=f'{ctx.author.display_name} - NSFW Coinflip',icon_url=f'{ctx.author.avatar.url}')
-		embed.set_image(url=rdl('big_ass animated',random.randint(1,100)))
+		embed.set_image(url=rdl('big_ass animated -video',random.randint(1,100)))
 		embed.set_footer(text='Pornbot 2.0 - Made By ihatedisc.ord')
 		await ctx.channel.send(embed=embed)
 # ================================================================================================================
@@ -170,13 +170,13 @@ async def fcoin(ctx):
 	if side == 50 or side > 50:
 		embed = discord.Embed(title=f'Furry Coinflip: Heads', color=ctx.author.color)
 		embed.set_author(name=f'{ctx.author.display_name} - Furry Coinflip',icon_url=f'{ctx.author.avatar.url}')
-		embed.set_image(url=rdl('furry blowjob animated',random.randint(1,100)))
+		embed.set_image(url=rdl('furry blowjob animated -video',random.randint(1,100)))
 		embed.set_footer(text='Pornbot 2.0 - Made By ihatedisc.ord')
 		await ctx.channel.send(embed=embed)
 	elif side < 50:
 		embed = discord.Embed(title=f'Furry Coinflip: Tails', color=ctx.author.color)
 		embed.set_author(name=f'{ctx.author.display_name} - Furry Coinflip',icon_url=f'{ctx.author.avatar.url}')
-		embed.set_image(url=rdl('furry tail animated',random.randint(1,100)))
+		embed.set_image(url=rdl('furry tail animated -video',random.randint(1,100)))
 		embed.set_footer(text='Pornbot 2.0 - Made By ihatedisc.ord')
 		await ctx.channel.send(embed=embed)
 # ================================================================================================================
