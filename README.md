@@ -1,5 +1,3 @@
-### NOTE: This repo hasn't been tested or updated in many many months, and i'm considering deprecated for the time being.
-
 
 # r34discordbot
 A discord bot that pulls images from rule34 with specific tags and posts them.
@@ -24,6 +22,6 @@ Python 3.8 (at minimum)
 ### For more guidance, check the wiki/doccumentation.
 
 # Credits
-Thanks to [LordOfPolls](https://github.com/LordOfPolls) for his [Rule34-api-wrapper](https://github.com/LordOfPolls/Rule34-API-Wrapper) (It made my job semi easier and also much more difficult)
+At one point this included 'lordofpolls' but they actually deprecated their api and no longer support it
 
 Thanks to Marloes for the help with debugging and stuff, i had some problems along the way and their feed back was definitely helpful!
