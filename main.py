@@ -4,6 +4,16 @@
 # =============[General]=============
 token = 'token' # this is your discord bot token. 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+import discord
+from discord.ext import commands as command
+import urllib.request as u
+import xml.etree.ElementTree as et
+#import rule34 # now defunct
+import random
+import time
+import asyncio
+import os
+import requests
 intents = discord.Intents(messages=True, guilds=True)
 intents.message_content = True # probably an easier way to do this but i straight up   don't use discord.py anymore
 ltime = time.asctime(time.localtime())
