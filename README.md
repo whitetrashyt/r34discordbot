@@ -2,9 +2,7 @@
 # r34discordbot
 A discord bot that pulls images from rule34 with specific tags and posts them.
 
-
-Feel free to use it.
-
+While we're here, why don't you try [notsobot](https://notsobot.com/) instead? way more functional.
 [Trello Board](https://trello.com/b/07EqYuyc)
 
 # Requirements
