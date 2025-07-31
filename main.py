@@ -4,35 +4,44 @@
 # =============[General]=============
 token = 'token' # this is your discord bot token. 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-import discord
-from discord.ext import commands as command
-import urllib.request as u
-import xml.etree.ElementTree as et
-import rule34
-import random
-import time
-import asyncio
-import os
-import requests
 intents = discord.Intents(messages=True, guilds=True)
 intents.message_content = True # probably an easier way to do this but i straight up   don't use discord.py anymore
 ltime = time.asctime(time.localtime())
 client = command.Bot(command_prefix='&', intents=intents)
 Client = discord.Client(intents=intents) # edit 7/31/25 why do we initialize the discord client twice ? what crack was i on?
 client.remove_command('help')
-r = rule34.Rule34
+def geturl(tags='knot',limit=1000,PID=1): # add default tags + limit so we dont   shit the bed when the user tries to parse bad data (they will)
+	# make tags usable in url by replacing ' ' with +
+	ntags = tags.replace(' ','+')
+	# to make the url we have to shove plus-sign (+) seperated tags in there
+	url = f'https://www.rule34.xxx/index.php?page=dapi&s=post&q=index&tags={ntags}&limit={limit}&pid={PID}' # big fan of the way you have zero error handling just incase something goes wrong
+	return url
+# response = request.urlopen(request_params).read()
+def getparams(tags='knot',limit=1000): # right back to bad practices
+	request_params = u.Request(
+    url=f"{geturl(tags,limit)}", 
+    headers={'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',
+       'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+       'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
+       'Accept-Encoding': 'none',
+       'Accept-Language': 'en-US,en;q=0.8',
+       'Connection': 'keep-alive'}
+)    
+	return request_params
 def xmlparse(str):
-	root = et.parse(u.urlopen(str))
+	req = getparams(str)
+	root = et.parse(u.urlopen(req))
 	for i in root.iter('post'):
 		fileurl = i.attrib['file_url']
 		return fileurl
 def xmlcount(str):
-	root = et.parse(u.urlopen(str))
+	req = getparams(str)
+	root = et.parse(u.urlopen(req))
 	for i in root.iter('posts'):
 		count = i.attrib['count']
 		return count
 def pidfix(str):
-	ye = int(xmlcount(r.urlGen(tags=str,limit=1)))
+	ye = int(xmlcount(geturl(tags=str,limit=1)))
 	ye = ye - 1
 	return ye
 def rdl(str,int):
@@ -46,7 +55,7 @@ def rdl(str,int):
 	elif int != 0:	
 		int = random.randint(1,int)
 	print(f'[INFO {ltime}]: integer after randomizing: {int}')
-	xurl = r.urlGen(tags=str,limit=1,PID=int)
+	xurl = geturl(tags=str,limit=1,PID=int) # using 'int' as a variable is BAD practice!
 	print(xurl)
 	wr = xmlparse(xurl)
 	
@@ -60,6 +69,7 @@ def rdl(str,int):
 	elif 'webm' not in wr:
 		print(f'[INFO {ltime}]: Not a webm, dont recurse.')
 	return wr
+
 async def statuschange(): # edit 7/31/25 - should probably redact this until we ensure this method still works and causes no issues
 	while True:
 		await client.change_presence(activity=discord.Game(name='with my pussy'))
