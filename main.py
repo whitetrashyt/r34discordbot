@@ -14,22 +14,26 @@ import time
 import asyncio
 import os
 import requests
+
 intents = discord.Intents(messages=True, guilds=True)
 intents.message_content = True # probably an easier way to do this but i straight up   don't use discord.py anymore
 ltime = time.asctime(time.localtime())
 client = command.Bot(command_prefix='&', intents=intents)
 Client = discord.Client(intents=intents) # edit 7/31/25 why do we initialize the discord client twice ? what crack was i on?
 client.remove_command('help')
-def geturl(tags='knot',limit=1000,PID=1): # add default tags + limit so we dont   shit the bed when the user tries to parse bad data (they will)
+def geturl(tags='knot',limit=1000,PID=1,invoker=None): # add default tags + limit so we dont   shit the bed when the user tries to parse bad data (they will)
 	# make tags usable in url by replacing ' ' with +
 	ntags = tags.replace(' ','+')
 	# to make the url we have to shove plus-sign (+) seperated tags in there
 	url = f'https://www.rule34.xxx/index.php?page=dapi&s=post&q=index&tags={ntags}&limit={limit}&pid={PID}' # big fan of the way you have zero error handling just incase something goes wrong
+	print(f'invoker is {invoker} | geturl is {url}')
 	return url
 # response = request.urlopen(request_params).read()
-def getparams(tags='knot',limit=1000): # right back to bad practices
+def getparams(tags='knot',limit=1000,PID=1,invoker=None,url=None): # right back to bad practices # also i added invoker value for debug
+	print(f'invoker for getparams is {invoker}')
+	url=geturl(tags,limit,PID,invoker='request_params')
 	request_params = u.Request(
-    url=f"{geturl(tags,limit)}", 
+    url=url, 
     headers={'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',
        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
        'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
@@ -38,42 +42,45 @@ def getparams(tags='knot',limit=1000): # right back to bad practices
        'Connection': 'keep-alive'}
 )    
 	return request_params
-def xmlparse(str):
-	req = getparams(str)
+def xmlparse(tags,int):
+	req = getparams(tags,limit=1,invoker='xmlparse',PID=int)
+	print(f'xmlparse is using: {tags}')
 	root = et.parse(u.urlopen(req))
 	for i in root.iter('post'):
 		fileurl = i.attrib['file_url']
 		return fileurl
-def xmlcount(str):
-	req = getparams(str)
+def xmlcount(tags):
+	print(f'xmlcount is using: {str}')
+	req = getparams(tags,invoker='xmlcount')
 	root = et.parse(u.urlopen(req))
 	for i in root.iter('posts'):
 		count = i.attrib['count']
 		return count
 def pidfix(str):
-	ye = int(xmlcount(geturl(tags=str,limit=1)))
+	ye = int(xmlcount(geturl(tags=str,limit=1,invoker='pidfix')))
+	print(f'pidfix is {ye}')
 	ye = ye - 1
 	return ye
-def rdl(str,int):
+def rdl(tags,int):
 	print(f'[INFO {ltime}]: integer provided: {int}')
 
-	if int > 2000:
-		int = 2000
+	if int > 1000:
+		int = 1000
 	if int == 0:
 		int == 0
 		print(f'[INFO {ltime}]: Integer is 0, accommodating for offset overflow bug. ')	
 	elif int != 0:	
 		int = random.randint(1,int)
 	print(f'[INFO {ltime}]: integer after randomizing: {int}')
-	xurl = geturl(tags=str,limit=1,PID=int) # using 'int' as a variable is BAD practice!
-	print(xurl)
-	wr = xmlparse(xurl)
+	print(f'{tags}')
+	wr = xmlparse(tags,int)
+	print(f'wr is: {wr}')
 	
 	if 'webm' in wr:
-		if 'sound' not in str:
-			if 'webm' not in str:
+		if 'sound' not in tags:
+			if 'webm' not in tags:
 				print(f'[INFO {ltime}]: We got a .webm, user didnt specify sound. Recursing. user tags: {str}')
-				wr = rdl(str,pidfix(str))
+				wr = rdl(tags,pidfix(tags))
 		else:
 			pass
 	elif 'webm' not in wr:
@@ -118,8 +125,8 @@ async def porn(ctx,*arg):
 		elif newint != 0:
 			answer = rdl(arg,1)
    
-	if 'webm' in answer:
-		await waitone.delete
+	if 'webm' or '.mp4' in answer:
+		waitone.delete
 		await ctx.send(answer)
 	elif 'webm' not in answer:
 		embed = discord.Embed(title=f'Rule34: {arg}',color=ctx.author.color)
